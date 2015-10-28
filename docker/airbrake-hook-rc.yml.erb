@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ReplicationController
+id: <%= app_full_name %>
+metadata:
+  name: <%= app_full_name %>
+  labels:
+    app: <%= app_name %>
+    app_version: <%= app_version %>
+    environment: <%= config.environment %>
+spec:
+  ports:
+    - port: 3020
+      protocol: TCP
+      name: http
+  replicas: 1
+  selector:
+    app: <%= app_name %>
+    app_version: <%= app_version %>
+    environment: <%= config.environment %>
+  template:
+    metadata:
+      name: <%= app_name %>
+      labels:
+        app: <%= app_name %>
+        app_version: <%= app_version %>
+        environment: <%= config.environment %>
+    spec:
+      containers:
+        - name: <%= app_name %>
+          image: <%= config.docker_repo %>:<%= config.docker_repo_tag %>
+          command:
+            - node
+            - dist/server.js
+          ports:
+            - containerPort: 3020
+          env:
+            - { name: 'ASANA_ACCESS_TOKEN', value: '<%= ENV['ASANA_ACCESS_TOKEN'] %>' }
+            - { name: 'ASANA_PROJECT_WORKSPACE_ID', value: '<%= ENV['ASANA_PROJECT_WORKSPACE_ID'] %>' }
+            - { name: 'ASANA_AIRBRAKE_PROJECT_ID', value: '<%= ENV['ASANA_AIRBRAKE_PROJECT_ID'] %>' }
+            - { name: 'AIRBRAKE_ORG_NAME', value: '<%= ENV['AIRBRAKE_ORG_NAME'] %>' }
+          readinessProbe:
+            # an http probe
+            httpGet:
+              path: /_status
+              port: 3020
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /_status
+              port: 3020
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+      imagePullSecrets:
+        - name: dockercfg

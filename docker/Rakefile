@@ -1,0 +1,18 @@
+require 'dockerhelper'
+require 'dockerhelper/rake'
+
+config = Dockerhelper.configure do |c|
+  c.app_name                = 'airbrake-hook'
+  c.environment             = :production
+  c.git_repo_url            = 'git@github.com:RKMO/airbrake-hook.git'
+  c.git_root                = File.expand_path('../tmp/', __FILE__)
+  c.git_branch              = ENV['GIT_BRANCH'] || 'master'
+  c.dockerfile              = 'docker/Dockerfile.production'
+  c.docker_image            = 'airbrake-hook-prd'
+  c.docker_repo             = 'speeddigital/airbrake-hook'
+  c.docker_repo_tag_prefix  = ''
+  c.kube_rc_template        = File.expand_path('../airbrake-hook-rc.yml.erb', __FILE__)
+  c.kube_rc_dest_dir        = File.expand_path(File.dirname(__FILE__))
+end
+
+Dockerhelper::Tasks.init(config)

@@ -1,0 +1,16 @@
+{
+  "parser": "babel-eslint",
+  "extends": "../.eslintrc",
+  "rules": {
+    "func-names": 0,
+    "unused-expressions": 0
+  },
+  "globals": {
+    "expect": true
+  },
+  "env": {
+    "node": true,
+    "mocha": true
+  }
+}
+

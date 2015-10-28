@@ -1,0 +1,21 @@
+GIT
+  remote: git://github.com/RKMO/dockerhelper.git
+  revision: 207b7c8942c02c01c28085b4ce0bed65d4be1fbb
+  branch: master
+  specs:
+    dockerhelper (0.0.7)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rake (10.4.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  dockerhelper!
+  rake
+
+BUNDLED WITH
+   1.10.5

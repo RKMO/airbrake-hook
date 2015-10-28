@@ -1,0 +1,11 @@
+.git/
+.gitignore
+.nvmrc
+.eslint*
+.docker*
+node_modules/
+client/
+test/
+docker/
+tags
+tmp/
