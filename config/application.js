@@ -17,4 +17,9 @@ module.exports = {
     project_workspace_id: process.env.ASANA_PROJECT_WORKSPACE_ID,
     airbrake_project_id: process.env.ASANA_AIRBRAKE_PROJECT_ID,
   },
+  statsd: {
+    host: process.env.STATSD_HOST,
+    port: process.env.STATSD_PORT || 8125,
+    scope: process.env.STATSD_SCOPE,
+  },
 };

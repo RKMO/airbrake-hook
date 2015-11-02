@@ -38,6 +38,8 @@ spec:
             - { name: 'ASANA_PROJECT_WORKSPACE_ID', value: '<%= ENV['ASANA_PROJECT_WORKSPACE_ID'] %>' }
             - { name: 'ASANA_AIRBRAKE_PROJECT_ID', value: '<%= ENV['ASANA_AIRBRAKE_PROJECT_ID'] %>' }
             - { name: 'AIRBRAKE_ORG_NAME', value: '<%= ENV['AIRBRAKE_ORG_NAME'] %>' }
+            - { name: 'STATSD_HOST', value: '<%= ENV['STATSD_HOST'] %>' }
+            - { name: 'STATSD_SCOPE', value: '<%= ENV['STATSD_SCOPE'] %>' }
           readinessProbe:
             # an http probe
             httpGet:

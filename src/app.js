@@ -5,6 +5,7 @@ import 'source-map-support/register';
 
 import logger from './util/logger';
 import {createTask} from './helpers/task-creator.js';
+import {incrementAirbrakeStat} from './helpers/send-stats.js';
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.get('/airbrake', (req, res) => {
 });
 
 app.post('/airbrake', (req, res) => {
+  incrementAirbrakeStat(req.body);
   createTask(req.body)
     .then(task => {
       res.status(200).json(task).end();
