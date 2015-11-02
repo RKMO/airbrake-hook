@@ -8,5 +8,6 @@ const client = new Lynx(config.host, config.port, {
 });
 
 logger.info({ statsd: config }, 'statsd client loaded');
+client.increment('loaded');
 
 export default client;

@@ -11,7 +11,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use(requestLogger({ logger, headerName: 'x-request-id' }));
+const reqLoggerMiddleware = requestLogger({ logger, headerName: 'x-request-id' });
 
 app.get('/_status', (req, res) => {
   // TODO better health check
@@ -23,7 +23,7 @@ app.get('/airbrake', (req, res) => {
   res.status(404).end();
 });
 
-app.post('/airbrake', (req, res) => {
+app.post('/airbrake', reqLoggerMiddleware, (req, res) => {
   incrementAirbrakeStat(req.body);
   createTask(req.body)
     .then(task => {
