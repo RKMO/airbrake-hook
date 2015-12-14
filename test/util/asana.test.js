@@ -1,5 +1,3 @@
-import Promise from 'bluebird';
-
 import {AIRBRAKE_POST_BODY_EXAMPLE} from '../test-helpers.js';
 import {helpers} from '../../src/util/asana';
 import {formatNameFromAirbrake, formatNotesFromAirbrake} from '../../src/helpers/notes-formatter.js';
