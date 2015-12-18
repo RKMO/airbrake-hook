@@ -28,6 +28,20 @@ describe('asana util', function() {
         });
     });
 
+    it('createSection', () => {
+      return helpers.createSection('Testing')
+        .then(section => {
+          expect(section.name).to.eq('Testing:');
+          return section.id;
+        })
+        .then(sectionId => {
+          return [sectionId, helpers.createSection('Testing').get('id')];
+        })
+        .spread((existingSectionId, sectionId) => {
+          expect(sectionId).to.eq(existingSectionId)
+        });
+    });
+
     it('createTask & findTaskByNamePattern', () => {
       const airbrakeBody = Object.assign({}, AIRBRAKE_POST_BODY_EXAMPLE);
       const errorId = parseInt(Math.random() * 2147483647, 10);
@@ -43,12 +57,19 @@ describe('asana util', function() {
           expect(task.name).to.eq(name);
           expect(task.notes).to.eq(notes);
         })
-        .then(() => {
-          return helpers.findTaskByAirbrakeErrorId(errorId);
-        })
-        .tap((task) => {
+        .then(task => [task, helpers.createSection(airbrakeBody.error.project.name)])
+        .spread((task, section) => helpers.addProject(task, section))
+        .then(() => helpers.findTaskByAirbrakeErrorId(errorId))
+        .tap(task => {
           expect(task.id).to.exist;
           expect(task.name).to.eq(name);
+        })
+        .then((task) => helpers.getTask(task.id))
+        .tap(task => {
+          const [{ project, section }] = task.memberships;
+          expect(task.memberships).to.be.length(1);
+          expect(project.name).to.eq('Airbrakes');
+          expect(section.name).to.eq(airbrakeBody.error.project.name + ':');
         });
     });
   });

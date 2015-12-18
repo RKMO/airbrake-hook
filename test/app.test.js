@@ -37,9 +37,9 @@ describe('Routes', function() {
         });
     });
 
+    // this test depends on the above test running :/
     it('updates an existing asana task', (done) => {
       const updatedAirbrake = Object.assign({}, airbrakeBody);
-      updatedAirbrake.error.times_occurred = 345;
 
       agent
         .post('/airbrake')
@@ -49,13 +49,11 @@ describe('Routes', function() {
           if (err) throw err;
 
           expect(res.body.id).to.eq(createdTask.id);
-          expect(res.body.name).to.contain('345');
 
           return helpers.findTaskByAirbrakeErrorId(errorId)
             .then((task) => {
               expect(task).to.exist;
               expect(task.id).to.eq(createdTask.id);
-              expect(task.name).to.contain('345');
               expect(task.name).to.contain(airbrakeBody.error.id);
 
               done();

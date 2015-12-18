@@ -1,9 +1,12 @@
 import chai from 'chai';
+import Promise from 'bluebird';
 import fs from 'fs';
 import path from 'path';
 import request from 'supertest';
 
 import app from '../src/app.js';
+
+Promise.longStackTraces();
 
 const agent = request.agent(app);
 
