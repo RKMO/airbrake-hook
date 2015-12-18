@@ -38,7 +38,7 @@ describe('asana util', function() {
           return [sectionId, helpers.createSection('Testing').get('id')];
         })
         .spread((existingSectionId, sectionId) => {
-          expect(sectionId).to.eq(existingSectionId)
+          expect(sectionId).to.eq(existingSectionId);
         });
     });
 

@@ -3,7 +3,7 @@
   "extends": "../.eslintrc",
   "rules": {
     "func-names": 0,
-    "unused-expressions": 0
+    "no-unused-expressions": 0
   },
   "globals": {
     "expect": true

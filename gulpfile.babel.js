@@ -36,8 +36,8 @@ function lintSrc(src = sourcesAndTests) {
     .pipe(eslint.format());
 }
 
-function testSrc(src = defaultTestSrc, mochaOpts = {}) {
-  mochaOpts = Object.assign({ reporter: 'list' }, mochaOpts);
+function testSrc(src = defaultTestSrc, opts = {}) {
+  const mochaOpts = Object.assign({ reporter: 'list' }, opts);
   return gulp.src(src, {read: false})
     // gulp-mocha needs filepaths so you can't have any plugins before it
     .pipe(mocha(mochaOpts));

@@ -7,7 +7,7 @@ function createTask(airbrake) {
   const taskData = {
     name,
     notes,
-    completed: false
+    completed: false,
   };
 
   return helpers.findTaskByAirbrakeErrorId(airbrake.error.id)

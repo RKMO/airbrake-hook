@@ -37,27 +37,10 @@ function updateTask(taskId, taskData) {
   return client.tasks.update(taskId, taskData);
 }
 
-function createSection(name) {
-  const cachedSection = sectionCache.get(name);
-  if (cachedSection) {
-    return Promise.resolve(cachedSection);
-  }
-
-  const taskData = { name: name + ':' };
-  return findTasksBy('name', taskData.name)
-    .then(([section]) => {
-      if (section) return section;
-      return createTask(taskData);
-    })
-    .tap(section => {
-      sectionCache.set(name, section);
-    });
-}
-
 function addProject(task, section) {
   const data = {
     project: airbrakeProjectId,
-    section: section.id
+    section: section.id,
   };
   return client.tasks.addProject(task.id, data);
 }
@@ -91,18 +74,35 @@ function findTaskByAirbrakeErrorId(errorId) {
     .get(0);
 }
 
+function createSection(name) {
+  const cachedSection = sectionCache.get(name);
+  if (cachedSection) {
+    return Promise.resolve(cachedSection);
+  }
+
+  const taskData = { name: name + ':' };
+  return findTasksBy('name', taskData.name)
+    .then(([section]) => {
+      if (section) return section;
+      return createTask(taskData);
+    })
+    .tap(section => {
+      sectionCache.set(name, section);
+    });
+}
+
 const helpers = {
   me,
   projectWorkspace,
   createTask,
   updateTask,
-  createSection,
   addProject,
   airbrakeProject,
   allTasks,
   getTask,
   findTasksBy,
   findTaskByAirbrakeErrorId,
+  createSection,
 };
 
 export default client;
