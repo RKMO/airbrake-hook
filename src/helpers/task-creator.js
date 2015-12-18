@@ -4,7 +4,11 @@ import {formatNameFromAirbrake, formatNotesFromAirbrake} from './notes-formatter
 function createTask(airbrake) {
   const name = formatNameFromAirbrake(airbrake);
   const notes = formatNotesFromAirbrake(airbrake);
-  const taskData = {name, notes};
+  const taskData = {
+    name,
+    notes,
+    completed: false
+  };
 
   return helpers.findTaskByAirbrakeErrorId(airbrake.error.id)
     .then((task) => {
@@ -13,6 +17,10 @@ function createTask(airbrake) {
       }
 
       return helpers.createTask(taskData);
+    })
+    .tap(task => {
+      return helpers.createSection(airbrake.error.project.name)
+        .tap(section => helpers.addProject(task, section));
     });
 }
 

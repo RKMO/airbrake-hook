@@ -36,10 +36,11 @@ function lintSrc(src = sourcesAndTests) {
     .pipe(eslint.format());
 }
 
-function testSrc(src = defaultTestSrc) {
+function testSrc(src = defaultTestSrc, mochaOpts = {}) {
+  mochaOpts = Object.assign({ reporter: 'list' }, mochaOpts);
   return gulp.src(src, {read: false})
     // gulp-mocha needs filepaths so you can't have any plugins before it
-    .pipe(mocha({reporter: 'list'}));
+    .pipe(mocha(mochaOpts));
 }
 
 gulp.task('lint', () => {
@@ -60,7 +61,8 @@ gulp.task('dev', ['lint'], () => {
 
 gulp.task('test', () => {
   const src = argv.src || defaultTestSrc;
-  return testSrc(src);
+  const grep = argv.grep;
+  return testSrc(src, { grep });
 });
 
 gulp.task('watch', () => {
