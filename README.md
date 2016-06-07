@@ -21,13 +21,32 @@ When running the docker image or deploying it to kubernetes you must have the fo
 
 ```
 # build the image
-docker build -f docker/Dockerfile.production -t airbrake-hook .
+docker build -t airbrake-hook .
 
-# run it (assumes docker/.env.production exists with KEY=value pairs of required environment variables)
-docker run -t --env-file docker/.env.production -p 3020:3020 airbrake-hook
+# run it (assumes .env exists with KEY=value pairs of required environment variables)
+docker run -t --env-file .env -p 3020:3020 airbrake-hook
 
 # test in another tab
 curl -XPOST --data @example.json -H "Content-Type: application/json" dockerhost:3020/airbrake
+```
+
+## Production
+
+The `docker` directory includes example Kubernetes deployment and service
+scripts for those who want to run this on Kubernetes.
+
+
+The `./d` script is useful for building and pushing images, and deploying them to kubernetes.
+
+```
+# build the docker image
+./d build
+
+# push the docker image to a remote docker repo (e.g. Docker Hub)
+./d push
+
+# build, push, and update the kubernetes deployment with the latest image
+./d deploy
 ```
 
 ## TODOs
@@ -37,4 +56,3 @@ curl -XPOST --data @example.json -H "Content-Type: application/json" dockerhost:
 * Better tests
 * More backends (statsd, SNS, etc)
 * Modular backends
-

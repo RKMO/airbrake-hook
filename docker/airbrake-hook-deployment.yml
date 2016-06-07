@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: airbrake-hook
+spec:
+  replicas: 1
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: airbrake-hook
+  template:
+    metadata:
+      labels:
+        app: airbrake-hook
+        # 6 digit sha1 hash of the git commit this image was build on
+        app_version: 000000
+    spec:
+      terminationGracePeriodSeconds: 180
+      volumes:
+        - name: health
+          emptyDir: {}
+      containers:
+        - name: default
+          image: speeddigital/airbrake-hook:000000
+          command:
+            - node
+            - dist/server.js
+          env:
+            - { name: 'ASANA_ACCESS_TOKEN', value: 'replace_me' }
+            - { name: 'ASANA_PROJECT_WORKSPACE_ID', value: 'replace_me' }
+            - { name: 'ASANA_AIRBRAKE_PROJECT_ID', value: 'replace_me' }
+            - { name: 'AIRBRAKE_ORG_NAME', value: 'replace_me' }
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              cpu: 200m
+          readinessProbe:
+            # an http probe
+            httpGet:
+              path: /_status
+              port: 3020
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /_status
+              port: 3020
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+      imagePullSecrets:
+        - name: dockercfg

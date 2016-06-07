@@ -10,19 +10,19 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use(requestLogger({ logger, headerName: 'x-request-id' }));
+const requestLogMiddleware = requestLogger({ logger, headerName: 'x-request-id' });
 
 app.get('/_status', (req, res) => {
   // TODO better health check
   res.status(200).end();
 });
 
-app.get('/airbrake', (req, res) => {
+app.get('/airbrake', requestLogMiddleware, (req, res) => {
   // TODO
   res.status(404).end();
 });
 
-app.post('/airbrake', (req, res) => {
+app.post('/airbrake', requestLogMiddleware, (req, res) => {
   createTask(req.body)
     .then(task => {
       res.status(200).json(task).end();

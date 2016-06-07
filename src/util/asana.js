@@ -1,3 +1,4 @@
+import _ from 'highland';
 import asana from 'asana';
 import Promise from 'bluebird';
 import {memoize, merge} from 'lodash';
@@ -49,8 +50,33 @@ function airbrakeProject() {
   return client.projects.findById(airbrakeProjectId);
 }
 
+function findByProject() {
+  return client.tasks.findByProject(airbrakeProjectId);
+}
+
 function allTasks() {
-  return client.tasks.findByProject(airbrakeProjectId).get('data');
+  return findByProject().get('data');
+}
+
+function allTasksStream() {
+  return findByProject()
+    .then(collection => {
+      let lastPage = collection;
+
+      return _((push, next) => {
+        if (!lastPage) {
+          push(null, _.nil);
+          return;
+        }
+
+        lastPage.data.forEach(task => push(null, task));
+
+        lastPage.nextPage().then(page => {
+          lastPage = page;
+          next();
+        });
+      });
+    });
 }
 
 function getTask(taskId) {
@@ -58,15 +84,23 @@ function getTask(taskId) {
 }
 
 function findTasksBy(key, query) {
-  return allTasks()
-    .then(tasks => {
-      return tasks.filter((task) => {
+  return allTasksStream().then(stream => {
+    let foundTask = null
+    return new Promise((resolve, reject) => {
+      stream.find(task => {
         if (query instanceof RegExp) {
           return query.test(task[key]);
         }
+
         return task[key] === query;
+      }).each((task) => {
+        logger.info({task, key, query}, `found task`);
+        foundTask = task;
+      }).done(() => {
+        resolve([foundTask]);
       });
     });
+  });
 }
 
 function findTaskByAirbrakeErrorId(errorId) {
@@ -98,7 +132,9 @@ const helpers = {
   updateTask,
   addProject,
   airbrakeProject,
+  findByProject,
   allTasks,
+  allTasksStream,
   getTask,
   findTasksBy,
   findTaskByAirbrakeErrorId,

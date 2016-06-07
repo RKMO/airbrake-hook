@@ -28,6 +28,41 @@ describe('asana util', function() {
         });
     });
 
+    it('allTasksStream', function(done) {
+      this.timeout(10000);
+
+      // NOTE this is looking for a real airbrake that exists in asana when
+      //      this test was written it may or may not exist in the future
+      helpers.allTasksStream().then(stream => {
+        stream
+          .find(({name}) => {
+            return /UndefinedNamespaceException/.test(name);
+          })
+          .each(({name}) => {
+            expect(name).to.match(/UndefinedNamespaceException/);
+          })
+          .done(done);
+      });
+    });
+
+    describe('findTaskByAirbrakeErrorId', function() {
+      this.timeout(10000);
+
+      it('resolves null when existing task is not found', () => {
+        return helpers.findTaskByAirbrakeErrorId('does_not_exist').then(task => {
+          expect(task).to.be.nil;
+        });
+      });
+
+      it('finds an existing task', () => {
+        // NOTE this is a real airbrake that exists in asana when this test was written
+        //      it may or may not exist in the future
+        return helpers.findTaskByAirbrakeErrorId('123456789').then(task => {
+          expect(task.name).to.match(/test/);
+        });
+      });
+    });
+
     it('createSection', () => {
       return helpers.createSection('Testing')
         .then(section => {

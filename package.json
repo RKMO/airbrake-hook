@@ -5,12 +5,13 @@
   "main": "src/index.js",
   "dependencies": {
     "asana": "^0.13.0",
-    "babel": "^5.8.29",
-    "bluebird": "^3.0.0",
-    "body-parser": "^1.14.1",
-    "bunyan": "^1.5.1",
+    "babel": "^5.8.38",
+    "bluebird": "^3.4.0",
+    "body-parser": "^1.15.1",
+    "bunyan": "^1.8.1",
     "bunyan-request": "^1.2.0",
-    "express": "^4.13.3",
+    "express": "^4.13.4",
+    "highland": "^2.8.1",
     "lodash": "^3.10.1",
     "source-map-support": "^0.3.3"
   },

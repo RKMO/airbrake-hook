@@ -9,3 +9,9 @@ test/
 docker/
 tags
 tmp/
+d
+.envrc
+.idea
+dist/
+example.json
+gulpfile.babel.js

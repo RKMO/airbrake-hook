@@ -1,10 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: airbrake-hook-prd
+  name: airbrake-hook
   labels:
     app: airbrake-hook
-    environment: production
 spec:
   type: NodePort
   ports:
@@ -13,4 +12,3 @@ spec:
     nodePort: 32003
   selector:
     app: airbrake-hook
-    environment: production

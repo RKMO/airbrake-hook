@@ -34,7 +34,7 @@ ${airbrake.error.last_notice.backtrace.join('\n')}
 }
 
 function formatNameFromAirbrake({error}) {
-  return `[${error.project.name}] ${error.error_message} [id:${error.id}]`;
+  return `[${error.project.name}] ${error.error_message} (${error.times_occurred}) [id:${error.id}]`;
 }
 
 export {formatNameFromAirbrake, formatNotesFromAirbrake, airbrakeUrl};
