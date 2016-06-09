@@ -4,7 +4,7 @@
   "description": "Airbrake webhook for Asana",
   "main": "src/index.js",
   "dependencies": {
-    "asana": "^0.13.0",
+    "asana": "^0.14.1",
     "babel": "^5.8.38",
     "bluebird": "^3.4.0",
     "body-parser": "^1.15.1",

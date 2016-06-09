@@ -39,9 +39,12 @@ function updateTask(taskId, taskData) {
 }
 
 function addProject(task, section) {
+  // by default, these options should insert this task to the top of the
+  // project/section, but that may not be working
   const data = {
     project: airbrakeProjectId,
     section: section.id,
+    insertAfter: null,
   };
   return client.tasks.addProject(task.id, data);
 }
